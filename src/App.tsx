@@ -21,7 +21,7 @@ const commands = [
   {
     id: "installTailwind",
     label: "Installer Tailwind CSS",
-    command: () => `npm install -D tailwindcss postcss autoprefixer`,
+    command: () => `npm install -D tailwindcss postcss autoprefixer prettier eslint-config-prettier eslint-plugin-react`,
   },
   {
     id: "initTailwind",
@@ -33,7 +33,8 @@ const commands = [
     label: "Modifier le fichier tailwind.config.js ",
     command: () => `/** @type {import('tailwindcss').Config} */\nmodule.exports = {
       content: [
-        './src/**/*.{js,jsx,ts,tsx}', 
+        "./index.html",
+        "./src/**/*.{js,ts,jsx,tsx}", 
       ],
       theme: {
         extend: {},
@@ -47,7 +48,157 @@ const commands = [
     command: () => `@tailwind base;\n@tailwind components;\n@tailwind utilities;
     `,
   },
+  {
+    id: "EsLintPrettier",
+    label: "Ajout fichier Eslint/Prettier",
+    command: () => `touch .eslintrc.js .prettierrc
+    `,
+  },
+  {
+    id: "Eslint",
+    label: "Fichier config pour Eslint",
+    command: () => `
+    /*.eslintrc.js*/
+    module.exports = {
+      env: {
+        browser: true,
+        es2021: true,
+      },
+      extends: [
+        'eslint:recommended',
+        'plugin:react/recommended',
+        'plugin:react/jsx-runtime', // Ajout pour React 18+
+        'plugin:react-hooks/recommended', // Ajout explicite des hooks rules
+        'plugin:@typescript-eslint/recommended',
+        'prettier',
+      ],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+        ecmaVersion: 'latest', // Plus moderne que 12
+        sourceType: 'module',
+      },
+      plugins: ['react', '@typescript-eslint', 'react-hooks'],
+      rules: {
+        'react/react-in-jsx-scope': 'off',
+        'react-hooks/rules-of-hooks': 'error', // Vérifie les règles des Hooks
+        'react-hooks/exhaustive-deps': 'warn', // Vérifie les dépendances des effets
+        'react/prop-types': 'off', // Off car vous utilisez TypeScript
+      },
+      settings: {
+        react: {
+          version: 'detect',
+        },
+      },
+    };
+    `,
+  },
+  {
+    id: "Prettier",
+    label: "Fichier config Prettier",
+    command: () => `{
+      "semi": true,
+      "tabWidth": 2,
+      "printWidth": 100,
+      "singleQuote": true,
+      "trailingComma": "all",
+      "jsxSingleQuote": true,
+      "bracketSpacing": true
+    }
+    `,
+  },
 ];
+const commandshad = [
+  {
+    id: "modifer",
+    label: "Modifier tsconfig.json ",
+    command: (name: string) =>
+      `{
+        "files": [],
+        "references": [
+          {
+            "path": "./tsconfig.app.json"
+          },
+          {
+            "path": "./tsconfig.node.json"
+          }
+        ],
+        "compilerOptions": {
+          "baseUrl": ".",
+          "paths": {
+            "@/*": ["./src/*"]
+          }
+        }
+      }
+      `,
+  },
+  {
+    id: "editer",
+    label: "Et ensuite le fichier tsconfig.app.json ",
+    command: (name: string) =>
+      `{
+        "compilerOptions": {
+          // ...
+          "baseUrl": ".",
+          "paths": {
+            "@/*": [
+              "./src/*"
+            ]
+          }
+          // ...
+        }
+      }      
+      `,
+  },
+  {
+    id: "ajout",
+    label: "Installer ",
+    command: (name: string) =>
+      `npm install -D @types/node`,
+  },
+  {
+    id: "viteconfig",
+    label: "Ajouter les lignes a vite.config.ts ",
+    command: (name: string) =>
+      `import path from "path"
+      import react from "@vitejs/plugin-react"
+      import { defineConfig } from "vite"
+      
+      export default defineConfig({
+        plugins: [react()],
+        resolve: {
+          alias: {
+            "@": path.resolve(__dirname, "./src"),
+          },
+        },
+      })          
+      `,
+  },
+  {
+    id: "installShadcn",
+    label: "Installer shadcn ",
+    command: (name: string) =>
+      `npx shadcn@latest init`,
+  },
+  {
+    id: "configShadcn",
+    label: "configurer en répondant  ",
+    command: (name: string) =>
+      `Which style would you like to use? › New York
+      Which color would you like to use as base color? › Zinc
+      Do you want to use CSS variables for colors? › no / yes
+      `,
+  },
+  {
+    id: "buttonShadcn",
+    label: "exemple pour ajouter un composant  ",
+    command: (name: string) =>
+      `npx shadcn@latest add button`,
+  },
+]
+
 const tsconfig = `{
   "compilerOptions": {
     "composite": true,
@@ -191,7 +342,39 @@ const App = () => {
               </Button>
             </div>
         </CardContent>
+      </Card>
+      <Card className="w-full max-w-2xl mx-auto">
+      <CardHeader>
+          <CardTitle className='text-3xl'>shadcn/ui </CardTitle>
+        </CardHeader>
+
+      </Card>
+      {commandshad.map(({ id, label, command }) => (
+        <Card key={id} className="w-full max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle>{label}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="relative mt-4">
+              <pre className="bg-slate-950 text-slate-50 rounded-lg p-4 overflow-x-auto">
+                <code>{command(name)}</code>
+              </pre>
+              <Button
+                size="icon"
+                variant="outline"
+                className="absolute top-2 right-2"
+                onClick={() => handleCopyToClipboard(command(name))}
+              >
+                <Copy
+                  className={copiedText === command(name) ? "text-green-500" : ""}
+                  size={16}
+                />
+              </Button>
+            </div>
+          </CardContent>
         </Card>
+      ))}
+
     </div>
   );
 };
