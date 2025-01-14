@@ -114,7 +114,7 @@ const commandshad = [
   {
     id: "modifer",
     label: "Modifier tsconfig.json ",
-    command: (name: string) =>
+    command: (_name: string) =>
       `{
         "files": [],
         "references": [
@@ -137,7 +137,7 @@ const commandshad = [
   {
     id: "editer",
     label: "Et ensuite le fichier tsconfig.app.json ",
-    command: (name: string) =>
+    command: (_name: string) =>
       `{
         "compilerOptions": {
           // ...
@@ -155,13 +155,13 @@ const commandshad = [
   {
     id: "ajout",
     label: "Installer ",
-    command: (name: string) =>
+    command: (_name: string) =>
       `npm install -D @types/node`,
   },
   {
     id: "viteconfig",
     label: "Ajouter les lignes a vite.config.ts ",
-    command: (name: string) =>
+    command: (_name: string) =>
       `import path from "path"
       import react from "@vitejs/plugin-react"
       import { defineConfig } from "vite"
@@ -179,13 +179,13 @@ const commandshad = [
   {
     id: "installShadcn",
     label: "Installer shadcn ",
-    command: (name: string) =>
+    command: (_name: string) =>
       `npx shadcn@latest init`,
   },
   {
     id: "configShadcn",
     label: "configurer en répondant  ",
-    command: (name: string) =>
+    command: (_name: string) =>
       `Which style would you like to use? › New York
       Which color would you like to use as base color? › Zinc
       Do you want to use CSS variables for colors? › no / yes
@@ -194,7 +194,7 @@ const commandshad = [
   {
     id: "buttonShadcn",
     label: "exemple pour ajouter un composant  ",
-    command: (name: string) =>
+    command: (_name: string) =>
       `npx shadcn@latest add button`,
   },
 ]
